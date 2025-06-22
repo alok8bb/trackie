@@ -14,21 +14,21 @@ export type Database = {
           created_at: string
           date: string | null
           habit_id: string | null
-          id: number
+          id: string 
           status: string | null
         }
         Insert: {
           created_at?: string
           date?: string | null
           habit_id?: string | null
-          id?: number
+          id?: string
           status?: string | null
         }
         Update: {
           created_at?: string
           date?: string | null
           habit_id?: string | null
-          id?: number
+          id?: string
           status?: string | null
         }
         Relationships: [
