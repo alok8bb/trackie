@@ -154,8 +154,23 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+}
+
+::-webkit-scrollbar {
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  border: oklch(0.275 0 0) solid 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.325 0 0);
+  border-radius: 10px;
 }
