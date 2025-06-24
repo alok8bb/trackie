@@ -5,19 +5,18 @@ import { useEffect, useState } from "react";
 import type { Session } from '@supabase/supabase-js'
 import GoogleLoginButton from "@/components/google-login-button";
 import { AddHabitDialog } from '@/components/add-habit-dialog';
-import { Tables } from "@/types/supabase";
 import { HabitTable } from "@/components/habit-table";
 import { Label } from "@radix-ui/react-label";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import moment from "moment";
+import useHabitUnifiedQuery from "@/hooks/use-habit-unified-query";
 
 
 export default function TrackerPage() {
     const [session, setSession] = useState<Session | null>(null);
-    const [habits, setHabits] = useState<Tables<"habits">[] | null>(null)
-    const [habitLogs, setHabitLogs] = useState<Tables<"habit_logs">[] | null>(null)
     const supabase = createClient();
     const [date, setDate] = useState<Date>(new Date());
+
+    const { data: habitData, isLoading, isError } = useHabitUnifiedQuery();
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -27,14 +26,6 @@ export default function TrackerPage() {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session)
-        })
-
-        supabase.from('habits').select().then(({ data }) => {
-            setHabits(data)
-        })
-
-        supabase.from("habit_logs").select().then(({ data }) => {
-            setHabitLogs(data)
         })
 
         return () => subscription.unsubscribe()
@@ -52,7 +43,7 @@ export default function TrackerPage() {
                     <h1 className='text-2xl font-bold'>
                         Welcome {session?.user?.user_metadata?.full_name?.split(" ")[0] || "Guest"}!
                     </h1>
-                    <p>You're tracking {habits?.length} habits</p>
+                    <p>You're tracking {habitData?.habits.length} habits</p>
                 </div>
                 <AddHabitDialog />
             </div>
@@ -69,8 +60,8 @@ export default function TrackerPage() {
                     setDate(newDate);
                 }} />
             </div>
-            {habits && habitLogs && habits.length !== 0 ?
-                <HabitTable habits={habits} habitLogs={habitLogs} date={date} />
+            {habitData && habitData.habits && habitData.habitLogs ?
+                <HabitTable habits={habitData.habits} habitLogs={habitData.habitLogs} date={date} />
                 : <div className="flex-1 flex items-center justify-center">
                     <p className="text-gray-500">No habits found. Start by adding a habit!</p>
                 </div>}

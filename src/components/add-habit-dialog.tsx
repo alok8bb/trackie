@@ -41,7 +41,7 @@ export function AddHabitDialog() {
                 id: uuidv4(),
                 title: habitTitle,
                 user_id: session?.user.id,
-                created_at: moment().startOf("day").toISOString(),
+                created_at: moment().toISOString(),
             })
             .select();
 

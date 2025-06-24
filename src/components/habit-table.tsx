@@ -13,6 +13,7 @@ import { Tables } from "@/types/supabase"
 import { createClient } from "@/utils/supabase/client"
 import { HABIT_STATUS, HabitStatus } from "@/lib/constants"
 import { v4 as uuidv4 } from 'uuid'
+import { useQueryClient } from "@tanstack/react-query"
 
 interface HabitTableProps {
     habits: Tables<"habits">[]
@@ -37,13 +38,15 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
         }
     }, [date]);
 
+    const queryClient = useQueryClient()
+
     const updateHabitLog = async (
         date: Date,
         habit: Tables<"habits">,
         existingLog?: Tables<"habit_logs">
     ) => {
         const supabase = createClient();
-        const isoDate = moment(date).toISOString();
+        const isoDate = moment.utc(date).startOf("day").toISOString();
 
         const HABIT_STATUS_CYCLE: HabitStatus[] = [
             HABIT_STATUS.LOGGED,
@@ -65,6 +68,7 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
 
             if (updateError) console.error("Error updating log:", updateError);
         } else {
+            console.log(isoDate)
             const { error: insertError } = await supabase.from("habit_logs").insert({
                 user_id: habit.user_id,
                 habit_id: habit.id,
@@ -76,6 +80,8 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
 
             if (insertError) console.error("Error inserting log:", insertError);
         }
+
+        queryClient.invalidateQueries({ queryKey: ['habits-data'] })
     };
 
     return (
@@ -111,8 +117,7 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
                                     const day = i + 1;
                                     const log = habitLogForMonth.find(log => moment(log.date).date() === day);
                                     return (
-                                        <TableCell key={day} className="px-6 hover:cursor-pointer" onClick={() => updateHabitLog(moment(date).date(day).toDate(), habit, log)
-                                        }>
+                                        <TableCell key={day} className="px-6 cursor-pointer" onClick={() => updateHabitLog(moment.utc(date).date(day).startOf("day").toDate(), habit, log)}>
                                             <div className="flex justify-center items-center">
                                                 {log ? (
                                                     log.status === HABIT_STATUS.LOGGED ? (
