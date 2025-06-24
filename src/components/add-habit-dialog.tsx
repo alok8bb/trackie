@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createClient } from "@/utils/supabase/client";
 import { Session } from "@supabase/supabase-js";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid'
 
@@ -40,7 +41,7 @@ export function AddHabitDialog() {
                 id: uuidv4(),
                 title: habitTitle,
                 user_id: session?.user.id,
-                created_at: new Date().toISOString(),
+                created_at: moment().startOf("day").toISOString(),
             })
             .select();
 

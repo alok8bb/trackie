@@ -10,6 +10,9 @@ import {
     TableCell
 } from "./ui/table"
 import { Tables } from "@/types/supabase"
+import { createClient } from "@/utils/supabase/client"
+import { HABIT_STATUS, HabitStatus } from "@/lib/constants"
+import { v4 as uuidv4 } from 'uuid'
 
 interface HabitTableProps {
     habits: Tables<"habits">[]
@@ -33,6 +36,47 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
             }
         }
     }, [date]);
+
+    const updateHabitLog = async (
+        date: Date,
+        habit: Tables<"habits">,
+        existingLog?: Tables<"habit_logs">
+    ) => {
+        const supabase = createClient();
+        const isoDate = moment(date).toISOString();
+
+        const HABIT_STATUS_CYCLE: HabitStatus[] = [
+            HABIT_STATUS.LOGGED,
+            HABIT_STATUS.SKIPPED,
+            HABIT_STATUS.MISSED,
+        ];
+
+        if (existingLog) {
+            const currentIndex = HABIT_STATUS_CYCLE.indexOf(
+                existingLog.status as HabitStatus
+            );
+            const nextStatus =
+                HABIT_STATUS_CYCLE[(currentIndex + 1) % HABIT_STATUS_CYCLE.length];
+            console.log(nextStatus)
+            const { error: updateError } = await supabase
+                .from("habit_logs")
+                .update({ status: nextStatus })
+                .eq("id", existingLog.id);
+
+            if (updateError) console.error("Error updating log:", updateError);
+        } else {
+            const { error: insertError } = await supabase.from("habit_logs").insert({
+                user_id: habit.user_id,
+                habit_id: habit.id,
+                date: isoDate,
+                status: HABIT_STATUS.LOGGED,
+                created_at: moment().toISOString(),
+                id: uuidv4(),
+            });
+
+            if (insertError) console.error("Error inserting log:", insertError);
+        }
+    };
 
     return (
         <div ref={containerRef} className="overflow-x-auto">
@@ -67,10 +111,11 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
                                     const day = i + 1;
                                     const log = habitLogForMonth.find(log => moment(log.date).date() === day);
                                     return (
-                                        <TableCell key={day} className="px-6">
+                                        <TableCell key={day} className="px-6 hover:cursor-pointer" onClick={() => updateHabitLog(moment(date).date(day).toDate(), habit, log)
+                                        }>
                                             <div className="flex justify-center items-center">
                                                 {log ? (
-                                                    log.status === 'logged' ? (
+                                                    log.status === HABIT_STATUS.LOGGED ? (
                                                         <Check className="text-green-500 w-5 h-5" />
                                                     ) : log.status === 'skipped' ? (
                                                         <span className="text-green-500">-</span>
