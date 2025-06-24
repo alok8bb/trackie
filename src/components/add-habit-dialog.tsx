@@ -13,12 +13,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createClient } from "@/utils/supabase/client";
 import { Session } from "@supabase/supabase-js";
+import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid'
 
 export function AddHabitDialog() {
     const [habitTitle, setHabitTitle] = useState<string>("");
+    const [open, setOpen] = useState<boolean>(false);
 
     const [session, setSession] = useState<Session | null>(null);
 
@@ -29,12 +31,13 @@ export function AddHabitDialog() {
         });
     }, []);
 
+    const queryClient = useQueryClient();
+
     const addHabit = async () => {
         if (!habitTitle) {
             return;
         }
         const supabase = createClient();
-        console.log(session?.user.id)
         const { data, error } = await supabase
             .from('habits')
             .insert({
@@ -48,12 +51,14 @@ export function AddHabitDialog() {
         if (error) {
             console.error("Error adding habit:", error);
         } else {
-            console.log("Habit added successfully:", data);
+            queryClient.invalidateQueries({queryKey: ['habits-data']});
+            setOpen(false); 
+            setHabitTitle(""); 
         }
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <form>
                 <DialogTrigger asChild>
                     <Button variant="outline">New Habit</Button>
