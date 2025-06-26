@@ -89,16 +89,24 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
             <Table className="min-w-max">
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="sticky left-0 z-10 bg-background">Habit</TableHead>
+                        <TableHead className="sticky left-0 z-10 bg-background font-bold pb-2 hover:cursor-default">
+                            <span>
+                                Habit
+                            </span>
+                        </TableHead>
                         {Array.from({ length: moment(date).daysInMonth() }, (_, i) => {
                             const day = i + 1;
+                            const dayMoment = moment(date).date(day);
                             return (
                                 <TableHead
                                     key={day}
                                     id={`day-${day}`}
-                                    className="text-center whitespace-nowrap"
+                                    className="text-center whitespace-nowrap pb-2 bg-background"
                                 >
-                                    {day}
+                                    <div className="flex flex-col items-center hover:cursor-default">
+                                        <span className="text-xs">{dayMoment.format("ddd")}</span>
+                                        <span>{day}</span>
+                                    </div>
                                 </TableHead>
                             );
                         })}
@@ -117,7 +125,7 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
                                     const day = i + 1;
                                     const log = habitLogForMonth.find(log => moment(log.date).date() === day);
                                     return (
-                                        <TableCell key={day} className="px-6 cursor-pointer" onClick={() => updateHabitLog(moment.utc(date).date(day).startOf("day").toDate(), habit, log)}>
+                                        <TableCell key={day} className="px-6 cursor-pointer bg-background" onClick={() => updateHabitLog(moment.utc(date).date(day).startOf("day").toDate(), habit, log)}>
                                             <div className="flex justify-center items-center">
                                                 {log ? (
                                                     log.status === HABIT_STATUS.LOGGED ? (
