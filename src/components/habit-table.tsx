@@ -88,20 +88,27 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
         <div ref={containerRef} className="overflow-x-auto">
             <Table className="min-w-max">
                 <TableHeader>
-                    <TableRow>
-                        <TableHead className="sticky left-0 z-10 bg-background font-bold pb-2 hover:cursor-default">
-                            <span>
-                                Habit
-                            </span>
+                    <TableRow className="border]">
+                        <TableHead className="sticky left-0 z-10 bg-background hover:!bg-background font-bold hover:cursor-default">
                         </TableHead>
                         {Array.from({ length: moment(date).daysInMonth() }, (_, i) => {
                             const day = i + 1;
                             const dayMoment = moment(date).date(day);
+                            let bgClass = "text-gray-500";
+                            if (dayMoment.isAfter(moment(), "day")) {
+                                bgClass = "text-gray-500";
+                            } else if (dayMoment.isBefore(moment(), "day")) {
+                                bgClass = "text-gray-500";
+                            }
+                            if (dayMoment.isSame(moment(), "day")) {
+                                bgClass = "bg-teal-200/2 text-gray-200"; // Highlight today
+                            }
+                            console.log(bgClass)
                             return (
                                 <TableHead
                                     key={day}
                                     id={`day-${day}`}
-                                    className="text-center whitespace-nowrap pb-2 bg-background"
+                                    className={`text-center bg-background whitespace-nowrap p-2 font-bold ${bgClass}`}
                                 >
                                     <div className="flex flex-col items-center hover:cursor-default">
                                         <span className="text-xs">{dayMoment.format("ddd")}</span>
@@ -120,12 +127,27 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
                         );
                         return (
                             <TableRow key={habit.id}>
-                                <TableCell className="sticky left-0 z-10 bg-background">{habit.title}</TableCell>
+                                <TableCell className="sticky left-0 z-10 bg-background text-gray-400">{habit.title}</TableCell>
                                 {Array.from({ length: moment(date).daysInMonth() }, (_, i) => {
                                     const day = i + 1;
                                     const log = habitLogForMonth.find(log => moment(log.date).date() === day);
+                                    const dayMoment = moment(date).date(day);
+                                    // Add highlight class if today
+                                    const cellBgClass = dayMoment.isSame(moment(), "day")
+                                        ? "bg-teal-200/2 text-white"
+                                        : "bg-background";
                                     return (
-                                        <TableCell key={day} className="px-6 cursor-pointer bg-background" onClick={() => updateHabitLog(moment.utc(date).date(day).startOf("day").toDate(), habit, log)}>
+                                        <TableCell
+                                            key={day}
+                                            className={`px-6 cursor-pointer ${cellBgClass}`}
+                                            onClick={() =>
+                                                updateHabitLog(
+                                                    moment.utc(date).date(day).startOf("day").toDate(),
+                                                    habit,
+                                                    log
+                                                )
+                                            }
+                                        >
                                             <div className="flex justify-center items-center">
                                                 {log ? (
                                                     log.status === HABIT_STATUS.LOGGED ? (

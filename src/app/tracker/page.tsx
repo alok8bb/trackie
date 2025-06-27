@@ -7,7 +7,7 @@ import GoogleLoginButton from "@/components/google-login-button";
 import { AddHabitDialog } from '@/components/add-habit-dialog';
 import { HabitTable } from "@/components/habit-table";
 import { Label } from "@radix-ui/react-label";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import useHabitUnifiedQuery from "@/hooks/use-habit-unified-query";
 
 
@@ -48,13 +48,14 @@ export default function TrackerPage() {
                 <AddHabitDialog />
             </div>
             <div className="my-4 flex items-center gap-2">
-                <ChevronLeft className="cursor-pointer" onClick={() => {
+                <ChevronLeft className="h-5 w-5 cursor-pointer" onClick={() => {
                     const newDate = new Date(date);
                     newDate.setMonth(newDate.getMonth() - 1);
                     setDate(newDate);
                 }} />
-                <Label className="text-lg font-semibold select-none">{date.toLocaleString('default', { 'month': 'long' })}</Label>
-                <ChevronRight className="cursor-pointer" onClick={() => {
+                <Calendar className="cursor-pointer h-4 w-4" onClick={() => setDate(new Date())} />
+                <Label className="text-md font-semibold select-none">{date.toLocaleString('default', { 'month': 'long' })}</Label>
+                <ChevronRight className="h-5 w-5 cursor-pointer" onClick={() => {
                     const newDate = new Date(date);
                     newDate.setMonth(newDate.getMonth() + 1);
                     setDate(newDate);
