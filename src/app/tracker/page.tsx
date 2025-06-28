@@ -40,10 +40,10 @@ export default function TrackerPage() {
         return <div className="h-screen w-full flex p-10 flex-col">
             <div className='flex gap-2 justify-between w-full'>
                 <div>
-                    <h1 className='text-2xl font-bold'>
+                    <h1 className='text-2xl font-bold text-gray-100'>
                         Welcome {session?.user?.user_metadata?.full_name?.split(" ")[0] || "Guest"}!
                     </h1>
-                    <p>You're tracking {habitData?.habits.length} habits</p>
+                    <p className="text-gray-300">you're tracking {habitData?.habits.length} habits</p>
                 </div>
                 <AddHabitDialog />
             </div>

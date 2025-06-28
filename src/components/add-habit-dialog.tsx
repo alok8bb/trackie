@@ -61,7 +61,7 @@ export function AddHabitDialog() {
         <Dialog open={open} onOpenChange={setOpen}>
             <form>
                 <DialogTrigger asChild>
-                    <Button variant="outline">New Habit</Button>
+                    <Button variant="outline" className="hover:cursor-pointer">New Habit</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>

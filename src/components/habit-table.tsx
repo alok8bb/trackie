@@ -94,14 +94,14 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
                         {Array.from({ length: moment(date).daysInMonth() }, (_, i) => {
                             const day = i + 1;
                             const dayMoment = moment(date).date(day);
-                            let bgClass = "text-gray-500";
+                            let bgClass = "text-gray-400";
                             if (dayMoment.isAfter(moment(), "day")) {
-                                bgClass = "text-gray-500";
+                                bgClass = "text-gray-400";
                             } else if (dayMoment.isBefore(moment(), "day")) {
-                                bgClass = "text-gray-500";
+                                bgClass = "text-gray-400";
                             }
                             if (dayMoment.isSame(moment(), "day")) {
-                                bgClass = "bg-teal-200/2 text-gray-200"; // Highlight today
+                                bgClass = "bg-teal-200/2 text-gray-100"; // Highlight today
                             }
                             console.log(bgClass)
                             return (
@@ -127,7 +127,7 @@ export const HabitTable = ({ habits, habitLogs, date }: HabitTableProps) => {
                         );
                         return (
                             <TableRow key={habit.id}>
-                                <TableCell className="sticky left-0 z-10 bg-background text-gray-400">{habit.title}</TableCell>
+                                <TableCell className="sticky left-0 z-10 bg-background text-gray-300">{habit.title}</TableCell>
                                 {Array.from({ length: moment(date).daysInMonth() }, (_, i) => {
                                     const day = i + 1;
                                     const log = habitLogForMonth.find(log => moment(log.date).date() === day);
