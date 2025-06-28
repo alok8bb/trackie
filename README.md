@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="start">
+  <img src="https://img.shields.io/badge/Next.js-14-blueviolet?logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Supabase-Postgres-green?logo=supabase" alt="Supabase" />
+  <img src="https://img.shields.io/badge/React%20Query-TanStack-ff4154?logo=react-query" alt="React Query" />
+</p>
 
-## Getting Started
+# Trackie
 
-First, run the development server:
+A simple habit tracker for web. It is highly inspired by [Loop Habit Tracker](https://play.google.com/store/search?q=loop%20habit%20tracker&c=apps) and only built because I wanted a similar thing on web / iOS.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to run?
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**  
+   ```sh
+   git clone https://github.com/alok8bb/trackie.git
+   cd trackie
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Set up environment variables**  
+   Copy the sample file and add your [Supabase](https://supabase.com/) project credentials:
+   ```sh
+   cp env.sample .env.local
+   ```
+   Then fill in the required `SUPABASE_URL`, `SUPABASE_ANON_KEY`, etc.
 
-## Learn More
+3. **Set up the database schema**  
+   If you're setting up your own Supabase instance, you'll need to create the required tables. You can use the SQL in [`supabase/schema.sql`](supabase/schema.sql).
 
-To learn more about Next.js, take a look at the following resources:
+4. **Install dependencies**  
+   ```sh
+   npm install
+   # or
+   pnpm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. **Start the development server**  
+   ```sh
+   npm run dev
+   # or
+   pnpm dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This is a beginner friendly project, feel free to explore and contribute! If you have an idea for a new feature or improvement, just build it and open a pull request. 
+
+---
+
+## Todo
+
+- Colored habits: ask for a few pre-defined colors while adding a habit in the new habit dialog.
+- PWA and responsive design for usability on phones.
+- Listing streaks & delete button on hovering the habits in main tracker, maybe a dedicated page with git graph-like view for the completed habits.
+- Optimizations on how Supabase stuff is handled since I dunno Supabase.
+
+---
+
+## Screenshots
+
+![App Screenshot](public/screenshot.png)
+![App Schema](public/supabase-schema.png)
