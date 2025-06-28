@@ -31,6 +31,7 @@ export default function Home() {
           </nav>
         </div>
       </header>
+      
 
       {/* Main Content */}
       <main className="flex-1 relative z-10 flex flex-col">
