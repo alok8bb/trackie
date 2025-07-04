@@ -54,6 +54,7 @@ This is a beginner friendly project, feel free to explore and contribute! If you
 
 ## Todo
 
+- <del>Logout button on top right corner with profile logo maybe</del>
 - Colored habits: ask for a few pre-defined colors while adding a habit in the new habit dialog.
 - PWA and responsive design for usability on phones.
 - Listing streaks & delete button on hovering the habits in main tracker, maybe a dedicated page with git graph-like view for the completed habits.

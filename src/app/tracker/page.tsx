@@ -9,12 +9,17 @@ import { HabitTable } from "@/components/habit-table";
 import { Label } from "@radix-ui/react-label";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import useHabitUnifiedQuery from "@/hooks/use-habit-unified-query";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 
 export default function TrackerPage() {
     const [session, setSession] = useState<Session | null>(null);
     const supabase = createClient();
     const [date, setDate] = useState<Date>(new Date());
+    const router = useRouter();
 
     const { data: habitData, isLoading, isError } = useHabitUnifiedQuery();
 
@@ -31,6 +36,12 @@ export default function TrackerPage() {
         return () => subscription.unsubscribe()
     }, [])
 
+    async function logout() { 
+        await supabase.auth.signOut()
+        setSession(null);
+        router.push("/");
+    }
+
 
     if (!session) {
         return <div className="h-screen w-full items-center flex justify-center">
@@ -45,7 +56,21 @@ export default function TrackerPage() {
                     </h1>
                     <p className="text-gray-300">you're tracking {habitData?.habits.length} habits</p>
                 </div>
-                <AddHabitDialog />
+                <div className="flex gap-8 items-center">
+                    <AddHabitDialog />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Avatar>
+                                <AvatarImage src={session?.user?.user_metadata?.picture || ""} alt={session?.user?.user_metadata?.full_name || "User Avatar"} className="w-10 h-10 rounded-full" />
+                                <AvatarFallback className="w-10 h-10 rounded-full bg-gray-500 text-white">PF</AvatarFallback>
+                            </Avatar>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="mt-2">
+                             {/* I don't know why default styles weren't working, so I'm slapping a button instead  */}
+                            <Button variant={"outline"} onClick={logout}>Logout</Button>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             </div>
             <div className="my-4 flex items-center gap-2">
                 <ChevronLeft className="h-5 w-5 cursor-pointer" onClick={() => {
